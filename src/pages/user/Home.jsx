@@ -223,73 +223,72 @@ const Home = () => {
       </div>
 
       {/* --- FAQ SECTION --- */}
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-20 pb-32">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center bg-primary-100 dark:bg-primary-900/30 p-3 rounded-full mb-4">
-            <HelpCircle
-              size={32}
-              className="text-primary-600 dark:text-primary-400"
-            />
-          </div>
-          <h2 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">
-            Frequently Asked Questions
-          </h2>
-          <p className="text-gray-500 dark:text-slate-400 font-medium">
-            Everything you need to know about booking with BookingBuddy.
-          </p>
-        </div>
-
-        <div className="space-y-4">
-          {faqs.map((faq, index) => (
-            <div
-              key={index}
-              className={`bg-white dark:bg-slate-900 rounded-2xl border transition-all duration-300 ${
-                openFaqIndex === index
-                  ? "border-primary-500 dark:border-primary-500 shadow-md shadow-primary-500/10"
-                  : "border-gray-200 dark:border-slate-800 shadow-sm hover:border-primary-300 dark:hover:border-primary-800"
-              }`}
-            >
-              <button
-                className="w-full px-6 py-5 flex items-center justify-between text-left focus:outline-none"
-                onClick={() => toggleFAQ(index)}
-              >
-                <span
-                  className={`font-bold text-lg ${
-                    openFaqIndex === index
-                      ? "text-primary-600 dark:text-primary-400"
-                      : "text-slate-900 dark:text-white"
-                  }`}
-                >
-                  {faq.question}
-                </span>
-                {openFaqIndex === index ? (
-                  <ChevronUp
-                    className="text-primary-500 flex-shrink-0 ml-4"
-                    size={20}
-                  />
-                ) : (
-                  <ChevronDown
-                    className="text-slate-400 dark:text-slate-500 flex-shrink-0 ml-4"
-                    size={20}
-                  />
-                )}
-              </button>
-
-              <div
-                className={`px-6 overflow-hidden transition-all duration-300 ease-in-out ${
-                  openFaqIndex === index
-                    ? "max-h-96 pb-5 opacity-100"
-                    : "max-h-0 opacity-0"
-                }`}
-              >
-                <p className="text-gray-600 dark:text-slate-400 font-medium leading-relaxed">
-                  {faq.answer}
+        <div className="relative py-20 pb-32">
+          
+          {/* This absolute div applies the heavy blur specifically to the FAQ section background */}
+          <div className="absolute inset-0 backdrop-blur-2xl bg-white/30 dark:bg-slate-950/40 pointer-events-none"></div>
+          
+          <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-md rounded-[3rem] p-8 md:p-12 shadow-2xl border border-white/50 dark:border-slate-700/50">
+              
+              <div className="text-center mb-12">
+                <div className="inline-flex items-center justify-center bg-primary-100 dark:bg-primary-900/30 p-3 rounded-full mb-4 shadow-sm">
+                  <HelpCircle size={32} className="text-primary-600 dark:text-primary-400" />
+                </div>
+                <h2 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white mb-4 tracking-tight drop-shadow-sm">
+                  Frequently Asked Questions
+                </h2>
+                <p className="text-slate-800 dark:text-slate-300 font-bold">
+                  Everything you need to know about booking with Briskode Tours.
                 </p>
               </div>
+
+              <div className="space-y-4">
+                {faqs.map((faq, index) => (
+                  <div
+                    key={index}
+                    className={`bg-white/80 dark:bg-slate-900/80 backdrop-blur-md rounded-2xl border transition-all duration-300 ${
+                      openFaqIndex === index
+                        ? "border-primary-500/60 dark:border-primary-500/60 shadow-lg shadow-primary-500/20"
+                        : "border-white/60 dark:border-slate-700/50 shadow-sm hover:border-primary-300/60 dark:hover:border-primary-800/60 hover:shadow-xl dark:hover:shadow-primary-900/10"
+                    }`}
+                  >
+                    <button
+                      className="w-full px-6 py-5 flex items-center justify-between text-left focus:outline-none"
+                      onClick={() => toggleFAQ(index)}
+                    >
+                      <span
+                        className={`font-bold text-lg ${
+                          openFaqIndex === index
+                            ? "text-primary-600 dark:text-primary-400"
+                            : "text-slate-900 dark:text-white"
+                        }`}
+                      >
+                        {faq.question}
+                      </span>
+                      {openFaqIndex === index ? (
+                        <ChevronUp className="text-primary-500 flex-shrink-0 ml-4" size={20} />
+                      ) : (
+                        <ChevronDown className="text-slate-600 dark:text-slate-400 flex-shrink-0 ml-4" size={20} />
+                      )}
+                    </button>
+
+                    <div
+                      className={`px-6 overflow-hidden transition-all duration-300 ease-in-out ${
+                        openFaqIndex === index ? "max-h-96 pb-5 opacity-100" : "max-h-0 opacity-0"
+                      }`}
+                    >
+                      <p className="text-slate-700 dark:text-slate-300 font-medium leading-relaxed">
+                        {faq.answer}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
             </div>
-          ))}
+          </div>
         </div>
-      </div>
     </div>
   );
 };

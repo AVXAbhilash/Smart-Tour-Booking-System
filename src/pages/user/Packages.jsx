@@ -1,10 +1,6 @@
 import React, { useState } from "react";
-// import { Link } from "react-router-dom";
 import {
   Search,
-  // MapPin,
-  // Clock,
-  // Star,
   Filter,
   ChevronDown,
   SlidersHorizontal,
@@ -12,72 +8,53 @@ import {
 import { tourData } from "../data/tours";
 import TourCard from "../../components/TourCard";
 
-// Mock Data
-const mockPackages = [
-  {
-    id: "TR-101",
-    title: "Bali Tropical Escapade",
-    location: "Indonesia",
-    price: 1200,
-    days: 5,
-    rating: 4.8,
-    reviews: 124,
-    image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4",
-  },
-  {
-    id: "TR-102",
-    title: "Swiss Alps Adventure",
-    location: "Switzerland",
-    price: 2400,
-    days: 7,
-    rating: 4.9,
-    reviews: 89,
-    image: "https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99",
-  },
-  {
-    id: "TR-103",
-    title: "Odisha Coastal Motorcycle Tour",
-    location: "India",
-    price: 850,
-    days: 6,
-    rating: 4.7,
-    reviews: 56,
-    image: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800",
-  },
-  {
-    id: "TR-104",
-    title: "Kyoto Heritage Walk",
-    location: "Japan",
-    price: 1800,
-    days: 6,
-    rating: 4.9,
-    reviews: 210,
-    image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e",
-  },
-  {
-    id: "TR-105",
-    title: "Santorini Island Hopper",
-    location: "Greece",
-    price: 1950,
-    days: 8,
-    rating: 4.6,
-    reviews: 78,
-    image: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e",
-  },
-  {
-    id: "TR-106",
-    title: "Machu Picchu Trek",
-    location: "Peru",
-    price: 1500,
-    days: 10,
-    rating: 4.8,
-    reviews: 145,
-    image: "https://images.unsplash.com/photo-1587595431973-160d0d94add1",
-  },
-];
+// Define the logical day ranges for our checkboxes
+const durationRanges = {
+  "1 - 3 Days": [1, 3],
+  "4 - 7 Days": [4, 7],
+  "8 - 14 Days": [8, 14],
+  "15+ Days": [15, 999], // 999 acts as our "Infinity" for 15+
+};
 
 const Packages = () => {
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  
+  // --- FILTER STATES ---
+  const [maxPrice, setMaxPrice] = useState(500000);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedDurations, setSelectedDurations] = useState([]);
+
+  // Handle checking/unchecking duration boxes
+  const handleDurationToggle = (duration) => {
+    setSelectedDurations((prev) =>
+      prev.includes(duration)
+        ? prev.filter((d) => d !== duration) // Remove it if already checked
+        : [...prev, duration] // Add it if not checked
+    );
+  };
+
+  // --- MASTER FILTER LOGIC ---
+  const filteredTours = tourData.filter((tour) => {
+    // 1. Price Check
+    const matchesPrice = tour.price <= maxPrice;
+
+    // 2. Search Check (checks both Title and Location, case-insensitive)
+    const matchesSearch = 
+      tour.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      tour.location.toLowerCase().includes(searchQuery.toLowerCase());
+
+    // 3. Duration Check
+    // If no checkboxes are selected, show all durations. Otherwise, check if it fits any selected range.
+    const matchesDuration = 
+      selectedDurations.length === 0 || 
+      selectedDurations.some((rangeKey) => {
+        const [min, max] = durationRanges[rangeKey];
+        return tour.days >= min && tour.days <= max;
+      });
+
+    // Tour must pass ALL three tests to be shown!
+    return matchesPrice && matchesSearch && matchesDuration;
+  });
 
   return (
     <div className="bg-gray-50 dark:bg-slate-950 min-h-screen pb-20 transition-colors duration-300">
@@ -122,7 +99,7 @@ const Packages = () => {
                 Filter Tours
               </div>
 
-              {/* Search */}
+              {/* 1. Search Filter */}
               <div className="mb-6">
                 <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
                   Search
@@ -136,21 +113,26 @@ const Packages = () => {
                   </div>
                   <input
                     type="text"
-                    placeholder="Tour name..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Tour name or location..."
                     className="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-600 text-slate-900 dark:text-white transition-colors text-sm font-medium placeholder-gray-400 dark:placeholder-slate-500"
                   />
                 </div>
               </div>
 
-              {/* Price Range */}
+              {/* 2. Price Range Slider */}
               <div className="mb-6">
                 <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
-                  Max Price: $3000
+                  Max Price: ${maxPrice}
                 </label>
                 <input
                   type="range"
                   min="100"
                   max="5000"
+                  step="50"
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(Number(e.target.value))}
                   className="w-full accent-primary-600 h-2 bg-gray-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer"
                 />
                 <div className="flex justify-between text-xs text-gray-500 dark:text-slate-400 mt-2 font-medium">
@@ -159,33 +141,41 @@ const Packages = () => {
                 </div>
               </div>
 
-              {/* Duration */}
+              {/* 3. Duration Filter */}
               <div className="mb-6">
                 <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3">
                   Duration
                 </label>
                 <div className="space-y-3">
-                  {["1 - 3 Days", "4 - 7 Days", "8 - 14 Days", "15+ Days"].map(
-                    (duration, i) => (
-                      <label
-                        key={i}
-                        className="flex items-center gap-3 cursor-pointer group"
-                      >
-                        <input
-                          type="checkbox"
-                          className="w-5 h-5 rounded border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-primary-600 focus:ring-primary-500 cursor-pointer"
-                        />
-                        <span className="text-gray-600 dark:text-slate-400 font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
-                          {duration}
-                        </span>
-                      </label>
-                    ),
-                  )}
+                  {Object.keys(durationRanges).map((duration, i) => (
+                    <label
+                      key={i}
+                      className="flex items-center gap-3 cursor-pointer group"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedDurations.includes(duration)}
+                        onChange={() => handleDurationToggle(duration)}
+                        className="w-5 h-5 rounded border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-primary-600 focus:ring-primary-500 cursor-pointer"
+                      />
+                      <span className="text-gray-600 dark:text-slate-400 font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
+                        {duration}
+                      </span>
+                    </label>
+                  ))}
                 </div>
               </div>
 
-              <button className="w-full bg-primary-50 dark:bg-primary-600/20 text-primary-700 dark:text-primary-400 hover:bg-primary-600 hover:text-white dark:hover:bg-primary-500 dark:hover:text-white font-bold py-3 rounded-xl transition-colors mt-4">
-                Apply Filters
+              {/* Optional: Clear Filters Button instead of Apply (since it's real-time) */}
+              <button 
+                onClick={() => {
+                  setMaxPrice(5000);
+                  setSearchQuery("");
+                  setSelectedDurations([]);
+                }}
+                className="w-full bg-primary-50 dark:bg-primary-600/20 text-primary-700 dark:text-primary-400 hover:bg-primary-600 hover:text-white dark:hover:bg-primary-500 dark:hover:text-white font-bold py-3 rounded-xl transition-colors mt-4"
+              >
+                Clear Filters
               </button>
             </div>
           </aside>
@@ -197,7 +187,7 @@ const Packages = () => {
               <p className="text-slate-600 dark:text-slate-400 font-medium">
                 Showing{" "}
                 <span className="font-bold text-slate-900 dark:text-white">
-                  {mockPackages.length}
+                  {filteredTours.length}
                 </span>{" "}
                 tours found
               </p>
@@ -223,18 +213,33 @@ const Packages = () => {
 
             {/* Tours Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Here we show all tours from the data file */}
-              {tourData.map((tour) => (
-                <TourCard key={tour.id} tour={tour} />
-              ))}
+              {filteredTours.length > 0 ? (
+                filteredTours.map((tour) => (
+                  <TourCard key={tour.id} tour={tour} />
+                ))
+              ) : (
+                <div className="col-span-1 md:col-span-2 text-center py-20 bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-slate-800">
+                  <p className="text-slate-500 dark:text-slate-400 font-medium text-lg">
+                    No tours match your current filters.
+                  </p>
+                  <button 
+                    onClick={() => { setMaxPrice(5000); setSearchQuery(""); setSelectedDurations([]); }}
+                    className="mt-4 text-primary-600 font-bold hover:underline"
+                  >
+                    Clear all filters
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Pagination / Load More */}
-            <div className="mt-10 flex justify-center">
-              <button className="bg-white dark:bg-slate-900 border-2 border-gray-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-primary-600 dark:hover:border-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-bold py-3 px-8 rounded-xl transition-colors">
-                Load More Packages
-              </button>
-            </div>
+            {filteredTours.length > 0 && (
+              <div className="mt-10 flex justify-center">
+                <button className="bg-white dark:bg-slate-900 border-2 border-gray-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-primary-600 dark:hover:border-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-bold py-3 px-8 rounded-xl transition-colors">
+                  Load More Packages
+                </button>
+              </div>
+            )}
           </main>
         </div>
       </div>
