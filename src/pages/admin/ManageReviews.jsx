@@ -13,7 +13,7 @@ const ManageReviews = () => {
   return (
     <AdminLayout>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">Manage Reviews</h1>
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Manage Reviews</h1>
         <p className="text-gray-500 mt-1 font-medium">Moderate customer feedback and ratings for your tours.</p>
       </div>
 

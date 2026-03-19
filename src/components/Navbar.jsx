@@ -111,10 +111,6 @@ const Navbar = () => {
             <Link to="/my-bookings" className={`font-bold transition-colors ${isActive('/my-bookings') ? 'text-primary-600 dark:text-primary-400' : 'text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400'}`}>
               My Bookings
             </Link>
-
-            <Link to="/faq" className={`font-bold transition-colors ${isActive('/faq') ? 'text-primary-600 dark:text-primary-400' : 'text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400'}`}>
-              FAQ
-            </Link>
             
             <div className="w-px h-6 bg-gray-200 dark:bg-slate-700"></div> {/* Divider */}
 
@@ -201,7 +197,6 @@ const Navbar = () => {
           <Link to="/home" onClick={() => setIsOpen(false)} className="block px-4 py-3 text-base font-bold text-slate-700 dark:text-slate-200 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-slate-800 rounded-2xl transition-colors">Home</Link>
           <Link to="/tours" onClick={() => setIsOpen(false)} className="block px-4 py-3 text-base font-bold text-slate-700 dark:text-slate-200 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-slate-800 rounded-2xl transition-colors">All Packages</Link>
           <Link to="/my-bookings" onClick={() => setIsOpen(false)} className="block px-4 py-3 text-base font-bold text-slate-700 dark:text-slate-200 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-slate-800 rounded-2xl transition-colors">My Bookings</Link>
-          <Link to="/faq" onClick={() => setIsOpen(false)} className="block px-4 py-3 text-base font-bold text-slate-700 dark:text-slate-200 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-slate-800 rounded-2xl transition-colors">FAQ</Link>
           <div className="h-px bg-gray-200 dark:bg-slate-800 my-2"></div>
           
           {/* Mobile User Profile Info & Logout */}

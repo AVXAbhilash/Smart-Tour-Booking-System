@@ -10,6 +10,7 @@ import Home from './pages/user/Home';
 import Packages from './pages/user/Packages';
 import TourDetails from './pages/user/TourDetails';
 import BookingHistory from './pages/user/BookingHistory';
+import Profile from './pages/user/Profile';
 import FAQ from './pages/user/FAQ'; // <-- Imported FAQ
 
 // Auth Pages
@@ -17,12 +18,14 @@ import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 
 // Admin Pages
-import AdminLogin from './pages/admin/AdminLogin';
+// import AdminLogin from './pages/admin/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import ManageTours from './pages/admin/ManageTours';
 import ManageUsers from './pages/admin/ManageUsers';
 import ManageReviews from './pages/admin/ManageReviews';
 import ViewBookings from './pages/admin/ViewBookings';
+import AdminAccount from './pages/admin/AdminAccount';
+
 
 // 404 Page
 import NotFound from './pages/NotFound';
@@ -35,12 +38,12 @@ function App() {
   const isAuthRoute = location.pathname === '/' || location.pathname === '/login' || location.pathname === '/register';
   
   // FIX: We added '/faq' to this array so the app knows to show the Navbar/Footer!
-  const isKnownUserRoute = [
-    '/home', 
-    '/tours', 
-    '/my-bookings', 
-    '/faq' 
-  ].includes(location.pathname) || location.pathname.startsWith('/tours/');
+const isKnownUserRoute = [
+  '/home', 
+  '/tours', 
+  '/my-bookings',
+  '/profile'  // <-- Add this here!
+].includes(location.pathname) || location.pathname.startsWith('/tours/');
   
   const showGlobalLayout = !isAdminRoute && !isAuthRoute && isKnownUserRoute;
 
@@ -61,15 +64,17 @@ function App() {
           <Route path="/tours" element={<Packages />} />
           <Route path="/tours/:id" element={<TourDetails />} />
           <Route path="/my-bookings" element={<BookingHistory />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/faq" element={<FAQ />} /> {/* <-- Added FAQ Route */}
 
           {/* ----- ADMIN ROUTES ----- */}
-          <Route path="/admin/login" element={<AdminLogin />} />
+          {/* <Route path="/admin/login" element={<AdminLogin />} /> */}
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/tours" element={<ManageTours />} />
           <Route path="/admin/bookings" element={<ViewBookings />} />
           <Route path="/admin/users" element={<ManageUsers />} />
           <Route path="/admin/reviews" element={<ManageReviews />} />
+          <Route path="/admin/account" element={<AdminAccount />} />
 
           {/* ----- 404 CATCH-ALL ----- */}
           <Route path="*" element={<NotFound />} />

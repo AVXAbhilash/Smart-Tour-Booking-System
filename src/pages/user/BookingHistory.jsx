@@ -2,8 +2,8 @@ import React from 'react';
 import { Calendar, MapPin, XCircle } from 'lucide-react';
 
 const mockBookings = [
-  { id: 'BRK-8921', tour: 'Bali Tropical Escapade', date: 'Oct 15, 2026', guests: 2, status: 'Upcoming', total: 2400, image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4' },
-  { id: 'BRK-4432', tour: 'Kyoto Heritage Tour', date: 'Jan 10, 2026', guests: 1, status: 'Completed', total: 1800, image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e' },
+  { id: 'BRK-8921', tour: 'Puri & Konark', date: 'Oct 15, 2026', guests: 2, status: 'Upcoming', total: 2400, image: 'https://admin.bookodisha.com/images/pages/Discover-the-Best-03_1657554549.jpg' },
+  { id: 'BRK-4432', tour: 'Cillika Lake', date: 'Jan 10, 2026', guests: 1, status: 'Completed', total: 18000, image: 'https://otdc.odisha.gov.in/storage/explore/1707229583_chilikalake.webp' },
 ];
 
 const BookingHistory = () => {
@@ -38,7 +38,7 @@ const BookingHistory = () => {
               </div>
 
               <div className="w-full sm:w-auto flex flex-col sm:items-end justify-between h-full space-y-4 sm:space-y-0 border-t sm:border-t-0 sm:border-l border-gray-100 dark:border-slate-800 pt-4 sm:pt-0 sm:pl-6 mt-4 sm:mt-0">
-                <div className="text-2xl font-black text-slate-900 dark:text-white">${booking.total}</div>
+                <div className="text-2xl font-black text-slate-900 dark:text-white">₹{booking.total}</div>
                 {booking.status === 'Upcoming' && (
                   <button className="flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2 border border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl font-bold transition-colors">
                     <XCircle size={16} /> Cancel

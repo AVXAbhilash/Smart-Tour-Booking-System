@@ -22,7 +22,7 @@ const AdminDashboard = () => {
     <AdminLayout>
       <div className="mb-8 flex justify-between items-end">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Overview</h1>
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Overview</h1>
           <p className="text-gray-500 mt-1 font-medium">Monitor your business metrics and recent activity.</p>
         </div>
         <button className="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl font-medium transition-colors flex items-center gap-2">

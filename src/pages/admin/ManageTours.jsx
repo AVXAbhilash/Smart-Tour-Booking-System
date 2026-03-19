@@ -13,7 +13,7 @@ const ManageTours = () => {
     <AdminLayout>
       <div className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Manage Tours</h1>
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Manage Tours</h1>
           <p className="text-gray-500 mt-1 font-medium">Add, edit, or remove tour packages.</p>
         </div>
         <button className="bg-primary-600 hover:bg-primary-700 text-white px-5 py-2.5 rounded-xl font-bold transition-all shadow-lg shadow-primary-500/30 flex items-center gap-2">

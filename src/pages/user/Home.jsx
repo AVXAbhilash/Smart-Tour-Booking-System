@@ -1,54 +1,27 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Search,
   MapPin,
   Calendar,
   Star,
-  Clock,
   Mountain,
   Palmtree,
   Building,
   Compass,
+  HelpCircle,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
+import { tourData } from "../data/tours";
+import TourCard from "../../components/TourCard";
 
-// Mock Data for Featured Tours
-const featuredTours = [
-  {
-    id: "TR-101",
-    title: "Bali Tropical Escapade",
-    location: "Indonesia",
-    price: 1200,
-    days: 5,
-    rating: 4.8,
-    image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4",
-  },
-  {
-    id: "TR-102",
-    title: "Swiss Alps Adventure",
-    location: "Switzerland",
-    price: 2400,
-    days: 7,
-    rating: 4.9,
-    image: "https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99",
-  },
-  {
-    id: "TR-104",
-    title: "Kyoto Heritage Tour",
-    location: "Japan",
-    price: 1800,
-    days: 6,
-    rating: 4.7,
-    image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e",
-  },
-];
-
-// Added dark mode color variants to the categories
 const categories = [
   {
     name: "Mountain Treks",
     icon: Mountain,
-    color: "bg-emerald-100 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400",
+    color:
+      "bg-emerald-100 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400",
   },
   {
     name: "Beach Holidays",
@@ -58,12 +31,43 @@ const categories = [
   {
     name: "City Explorers",
     icon: Building,
-    color: "bg-purple-100 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400",
+    color:
+      "bg-purple-100 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400",
   },
-  { 
-    name: "Adventure", 
-    icon: Compass, 
-    color: "bg-orange-100 text-orange-600 dark:bg-orange-500/20 dark:text-orange-400" 
+  {
+    name: "Adventure",
+    icon: Compass,
+    color:
+      "bg-orange-100 text-orange-600 dark:bg-orange-500/20 dark:text-orange-400",
+  },
+];
+
+// FAQ Data
+const faqs = [
+  {
+    question: "How do I book a tour on Briskode Tours?",
+    answer:
+      "Booking is simple! Browse our Packages page, select your desired destination, choose your dates and number of guests on the Tour Details page, and click 'Proceed to Book'. You can then complete your payment securely.",
+  },
+  {
+    question: "What is your cancellation policy?",
+    answer:
+      "You can cancel for a full refund up to 7 days before your tour's start date. Cancellations made within 7 days of the tour are subject to a 50% cancellation fee. No-shows will not be refunded.",
+  },
+  {
+    question: "Are flights included in the package prices?",
+    answer:
+      "No, our standard packages cover accommodation, guided tours, local transfers, and specified meals. International or domestic flights to the starting destination are not included unless explicitly stated in the tour details.",
+  },
+  {
+    question: "Is it safe to pay online through your platform?",
+    answer:
+      "Absolutely. We use industry-standard encryption and partner with secure payment gateways to ensure your financial data is completely protected.",
+  },
+  {
+    question: "Can I customize a tour package?",
+    answer:
+      "Currently, our packages are pre-set to offer the best curated experience. However, if you have a group of 6 or more, please contact our support team to discuss private, customized itineraries.",
   },
 ];
 
@@ -72,42 +76,52 @@ const Home = () => {
   const [destination, setDestination] = useState("");
   const [date, setDate] = useState("");
 
-  // Handle the search form submission
+  // State for the FAQ accordion
+  const [openFaqIndex, setOpenFaqIndex] = useState(null);
+
   const handleSearch = (e) => {
     e.preventDefault();
-
-    // Create query parameters
     const params = new URLSearchParams();
     if (destination) params.append("dest", destination.toLowerCase());
     if (date) params.append("date", date);
-
-    // Navigate to the Packages page with the applied filters
     navigate(`/tours?${params.toString()}`);
+  };
+
+  const toggleFAQ = (index) => {
+    setOpenFaqIndex(openFaqIndex === index ? null : index);
   };
 
   return (
     <div className="bg-gray-50 dark:bg-slate-950 min-h-screen transition-colors duration-300">
       {/* --- HERO SECTION --- */}
+      {/* RESTORED THIS MISSING WRAPPER DIV */}
       <div className="relative h-[80vh] flex items-center justify-center overflow-hidden">
-        {/* Background Image & Gradients */}
+        {/* Background Video & Gradients */}
         <div className="absolute inset-0 bg-slate-900">
-          <img
-            src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800"
-            alt="Travel Hero"
-            className="w-full h-full object-cover opacity-60 scale-105 animate-[pulse_20s_ease-in-out_infinite_alternate]"
-          />
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover opacity-60 scale-105"
+          >
+            {/* React automatically looks in the 'public' folder. 
+              Since your file is 'public/hero.mp4', you just write '/hero.mp4' 
+            */}
+            <source src="/hero.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
         </div>
         <div className="absolute inset-0 bg-gradient-to-b from-slate-900/40 via-transparent to-gray-50 dark:to-slate-950 transition-colors duration-300"></div>
 
-        {/* Hero Content */}
         <div className="relative z-10 text-center px-4 pt-16 md:pt-20">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white font-medium text-sm mb-6 shadow-lg">
-            <Star size={16} className="text-primary-400 fill-primary-400" />
+            <Star size={16} className="text-yellow-400 fill-yellow-400" />
             Tour Booking Platform
           </div>
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6 tracking-tighter drop-shadow-2xl">
             Find Your Next <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-cyan-300">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-yellow-300">
               Escape
             </span>
           </h1>
@@ -126,7 +140,11 @@ const Home = () => {
         >
           <div className="flex flex-col w-full md:w-auto flex-1 px-4 py-2 hover:bg-gray-50 dark:hover:bg-slate-800/50 rounded-2xl transition-colors cursor-text">
             <label className="text-xs font-black text-slate-800 dark:text-slate-300 uppercase tracking-widest mb-1 flex items-center gap-1.5">
-              <MapPin size={14} className="text-primary-600 dark:text-primary-400" /> Destination
+              <MapPin
+                size={14}
+                className="text-primary-600 dark:text-primary-400"
+              />{" "}
+              Destination
             </label>
             <input
               type="text"
@@ -141,7 +159,11 @@ const Home = () => {
 
           <div className="flex flex-col w-full md:w-auto flex-1 px-4 py-2 hover:bg-gray-50 dark:hover:bg-slate-800/50 rounded-2xl transition-colors cursor-pointer">
             <label className="text-xs font-black text-slate-800 dark:text-slate-300 uppercase tracking-widest mb-1 flex items-center gap-1.5">
-              <Calendar size={14} className="text-primary-600 dark:text-primary-400" /> Dates
+              <Calendar
+                size={14}
+                className="text-primary-600 dark:text-primary-400"
+              />{" "}
+              Dates
             </label>
             <input
               type="date"
@@ -150,8 +172,8 @@ const Home = () => {
               className="bg-transparent text-lg text-slate-900 dark:text-white focus:outline-none font-semibold w-full cursor-pointer dark:[color-scheme:dark]"
             />
           </div>
-          
-          <button 
+
+          <button
             type="submit"
             className="w-full md:w-auto bg-slate-900 dark:bg-primary-600 hover:bg-primary-600 dark:hover:bg-primary-500 text-white px-10 py-5 rounded-[1.5rem] font-bold transition-all duration-300 shadow-xl shadow-slate-900/20 dark:shadow-primary-900/20 hover:shadow-primary-600/30 flex items-center justify-center gap-2"
           >
@@ -171,14 +193,17 @@ const Home = () => {
               <div className={`p-4 rounded-2xl ${category.color}`}>
                 <category.icon size={32} strokeWidth={1.5} />
               </div>
-              <h3 className="font-bold text-slate-900 dark:text-white">{category.name}</h3>
+              <h3 className="font-bold text-slate-900 dark:text-white">
+                {category.name}
+              </h3>
             </div>
           ))}
         </div>
       </div>
 
       {/* --- FEATURED TOURS SECTION --- */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+      {/* RESTORED THE MISSING WRAPPER AND HEADINGS HERE */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 border-b border-gray-200 dark:border-slate-800/50">
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
           <div>
             <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight">
@@ -188,68 +213,80 @@ const Home = () => {
               Handpicked premium packages for your next adventure.
             </p>
           </div>
-          <Link
-            to="/tours"
-            className="text-primary-600 dark:text-primary-400 font-bold hover:text-primary-800 dark:hover:text-primary-300 transition-colors flex items-center gap-1 bg-primary-50 dark:bg-primary-900/30 px-5 py-2.5 rounded-full"
-          >
-            View all tours &rarr;
-          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-          {featuredTours.map((tour) => (
-            <Link
-              to={`/tours/${tour.id}`}
-              key={tour.id}
-              className="group bg-white dark:bg-slate-900 rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-2xl dark:hover:shadow-primary-900/20 transition-all duration-500 border border-gray-100 dark:border-slate-800 flex flex-col h-full hover:-translate-y-2"
+          {tourData.slice(0, 6).map((tour) => (
+            <TourCard key={tour.id} tour={tour} />
+          ))}
+        </div>
+      </div>
+
+      {/* --- FAQ SECTION --- */}
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-20 pb-32">
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center justify-center bg-primary-100 dark:bg-primary-900/30 p-3 rounded-full mb-4">
+            <HelpCircle
+              size={32}
+              className="text-primary-600 dark:text-primary-400"
+            />
+          </div>
+          <h2 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">
+            Frequently Asked Questions
+          </h2>
+          <p className="text-gray-500 dark:text-slate-400 font-medium">
+            Everything you need to know about booking with BookingBuddy.
+          </p>
+        </div>
+
+        <div className="space-y-4">
+          {faqs.map((faq, index) => (
+            <div
+              key={index}
+              className={`bg-white dark:bg-slate-900 rounded-2xl border transition-all duration-300 ${
+                openFaqIndex === index
+                  ? "border-primary-500 dark:border-primary-500 shadow-md shadow-primary-500/10"
+                  : "border-gray-200 dark:border-slate-800 shadow-sm hover:border-primary-300 dark:hover:border-primary-800"
+              }`}
             >
-              {/* Image Container */}
-              <div className="relative h-72 overflow-hidden m-3 rounded-[2rem]">
-                <img
-                  src={tour.image}
-                  alt={tour.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <button
+                className="w-full px-6 py-5 flex items-center justify-between text-left focus:outline-none"
+                onClick={() => toggleFAQ(index)}
+              >
+                <span
+                  className={`font-bold text-lg ${
+                    openFaqIndex === index
+                      ? "text-primary-600 dark:text-primary-400"
+                      : "text-slate-900 dark:text-white"
+                  }`}
+                >
+                  {faq.question}
+                </span>
+                {openFaqIndex === index ? (
+                  <ChevronUp
+                    className="text-primary-500 flex-shrink-0 ml-4"
+                    size={20}
+                  />
+                ) : (
+                  <ChevronDown
+                    className="text-slate-400 dark:text-slate-500 flex-shrink-0 ml-4"
+                    size={20}
+                  />
+                )}
+              </button>
 
-                {/* Floating Rating Badge */}
-                <div className="absolute top-4 right-4 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-black flex items-center gap-1.5 shadow-lg dark:text-white">
-                  <Star size={16} className="text-primary-500 fill-primary-500" />{" "}
-                  {tour.rating}
-                </div>
+              <div
+                className={`px-6 overflow-hidden transition-all duration-300 ease-in-out ${
+                  openFaqIndex === index
+                    ? "max-h-96 pb-5 opacity-100"
+                    : "max-h-0 opacity-0"
+                }`}
+              >
+                <p className="text-gray-600 dark:text-slate-400 font-medium leading-relaxed">
+                  {faq.answer}
+                </p>
               </div>
-
-              {/* Card Content */}
-              <div className="p-6 pt-4 flex flex-col flex-grow">
-                <div className="flex items-center gap-1.5 text-sm text-primary-600 dark:text-primary-400 font-bold mb-3">
-                  <MapPin size={16} /> {tour.location}
-                </div>
-
-                <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-4 leading-tight group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
-                  {tour.title}
-                </h3>
-
-                <div className="mt-auto flex justify-between items-end border-t border-gray-100 dark:border-slate-800 pt-5">
-                  <div className="flex flex-col">
-                    <span className="text-xs font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-1">
-                      Duration
-                    </span>
-                    <div className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300 font-bold">
-                      <Clock size={18} className="text-primary-500 dark:text-primary-400" /> {tour.days}{" "}
-                      Days
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-xs font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-1 block">
-                      Starting from
-                    </span>
-                    <div className="text-2xl font-black text-slate-900 dark:text-white">
-                      ${tour.price}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Link>
+            </div>
           ))}
         </div>
       </div>

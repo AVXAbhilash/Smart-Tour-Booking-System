@@ -14,7 +14,7 @@ const ManageUsers = () => {
     <AdminLayout>
       <div className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Manage Users</h1>
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Manage Users</h1>
           <p className="text-gray-500 mt-1 font-medium">View and manage customer accounts and admin access.</p>
         </div>
         <button className="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl font-bold transition-all shadow-md flex items-center gap-2">
