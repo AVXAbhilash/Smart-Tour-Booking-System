@@ -8,18 +8,31 @@ const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   
+  // --- SYNC NAVBAR IMAGE STATE ---
+  const [navProfileImage, setNavProfileImage] = useState(() => {
+    return localStorage.getItem('userProfileImage') || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=150";
+  });
+
   const location = useLocation();
   const navigate = useNavigate();
 
-  // CHECK IF LOGGED IN
   const isAuthenticated = !!localStorage.getItem('userToken');
-
   const isActive = (path) => location.pathname === path;
 
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const savedMode = localStorage.getItem('darkMode');
     return savedMode === 'true' || false;
   });
+
+  // Listener to update Navbar image when changed on Profile page
+  useEffect(() => {
+    const handleProfileUpdate = () => {
+      setNavProfileImage(localStorage.getItem('userProfileImage') || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=150");
+    };
+
+    window.addEventListener('profileImageUpdated', handleProfileUpdate);
+    return () => window.removeEventListener('profileImageUpdated', handleProfileUpdate);
+  }, []);
 
   useEffect(() => {
     if (isDarkMode) {
@@ -57,6 +70,7 @@ const Navbar = () => {
     setIsProfileOpen(false);
     setIsOpen(false);
     localStorage.removeItem('userToken'); 
+    localStorage.removeItem('userProfileImage'); // Clear image on logout
     navigate('/'); 
   };
 
@@ -96,7 +110,6 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-6 flex-shrink-0">
             <Link to="/" className={`font-bold transition-colors ${isActive('/') ? 'text-primary-600' : 'text-slate-600 hover:text-primary-600'}`}>Home</Link>
             
-            {/* Hide these links if user is NOT logged in */}
             {isAuthenticated && (
               <>
                 <Link to="/tours" className={`font-bold transition-colors ${isActive('/tours') ? 'text-primary-600' : 'text-slate-600 hover:text-primary-600'}`}>Packages</Link>
@@ -110,11 +123,11 @@ const Navbar = () => {
               {isDarkMode ? <Sun size={20} className="text-primary-400" /> : <Moon size={20} />}
             </button>
 
-            {/* DYNAMIC AUTH BUTTON: Shows Profile if logged in, "Sign In" button if logged out */}
             {isAuthenticated ? (
               <div className="relative">
                 <button onClick={() => setIsProfileOpen(!isProfileOpen)} className="flex items-center focus:outline-none ring-2 ring-transparent hover:ring-primary-500 rounded-full transition-all">
-                  <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=150" alt="User Profile" className="w-10 h-10 rounded-full object-cover border-2 border-white dark:border-slate-800 shadow-md" />
+                  {/* FIX: Syncs with Nav State Image */}
+                  <img src={navProfileImage} alt="User Profile" className="w-10 h-10 rounded-full object-cover border-2 border-white dark:border-slate-800 shadow-md" />
                 </button>
                 
                 <div className={`absolute right-0 mt-3 w-56 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-800 overflow-hidden transition-all origin-top-right ${isProfileOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'}`}>

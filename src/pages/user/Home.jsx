@@ -161,8 +161,8 @@ const Home = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20 w-full">
             <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
               <div>
-                <h2 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight">Trending Destinations</h2>
-                <p className="text-lg text-slate-600 dark:text-slate-400 mt-3 font-medium">Handpicked premium packages for your next adventure.</p>
+                <h2 className="text-5xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70">Trending Destinations</h2>
+                <p className="text-lg text-white dark:text-orange-400 mt-3 font-medium">Handpicked premium packages for your next adventure.</p>
               </div>
               <button 
                 onClick={() => handleProtectedAction(() => navigate('/tours'))} 

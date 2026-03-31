@@ -36,9 +36,10 @@ const Footer = () => {
           <div>
             <h3 className="text-slate-900 dark:text-white font-bold mb-4 tracking-wider uppercase text-sm">Legal</h3>
             <ul className="space-y-3 text-sm font-medium">
-              <li><Link to="#" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Privacy Policy</Link></li>
-              <li><Link to="#" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Terms of Service</Link></li>
-              <li><Link to="#" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Cancellation Policy</Link></li>
+              {/* FIX: Updated the routes for the legal pages! */}
+              <li><Link to="/legal/PrivacyPolicy" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Privacy Policy</Link></li>
+              <li><Link to="/legal/TermsOfService" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Terms of Service</Link></li>
+              <li><Link to="/legal/CancellationPolicy" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Cancellation Policy</Link></li>
             </ul>
           </div>
 

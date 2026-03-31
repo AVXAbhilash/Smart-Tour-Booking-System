@@ -1,14 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { User, Mail, Phone, Lock, Camera, Save, Shield } from 'lucide-react';
 
 const Profile = () => {
-  // Mock User Data State
   const [profileData, setProfileData] = useState({
     firstName: 'John',
     lastName: 'Doe',
     email: 'john@example.com',
     phone: '+1 234 567 8900',
   });
+
+  // --- IMAGE UPLOAD STATE ---
+  // Default image or grab from local storage if it exists!
+  const [profileImage, setProfileImage] = useState(() => {
+    return localStorage.getItem('userProfileImage') || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=250";
+  });
+  
+  const fileInputRef = useRef(null);
 
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
@@ -24,9 +31,23 @@ const Profile = () => {
     setPasswordData({ ...passwordData, [e.target.name]: e.target.value });
   };
 
+  // --- IMAGE HANDLER ---
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setProfileImage(imageUrl);
+      
+      // Save it to local storage so the Navbar can see it immediately
+      localStorage.setItem('userProfileImage', imageUrl);
+      
+      // Dispatch a custom event so Navbar knows to update right now!
+      window.dispatchEvent(new Event('profileImageUpdated'));
+    }
+  };
+
   const handleProfileSubmit = (e) => {
     e.preventDefault();
-    console.log('Profile updated:', profileData);
     alert('Profile updated successfully!');
   };
 
@@ -36,7 +57,6 @@ const Profile = () => {
       alert("New passwords don't match!");
       return;
     }
-    console.log('Password updated');
     alert('Password updated successfully!');
     setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
   };
@@ -48,19 +68,31 @@ const Profile = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
-          {/* Left Column: Avatar & Quick Stats */}
           <div className="lg:col-span-1 space-y-6">
             <div className="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-800 text-center transition-colors">
+              
               <div className="relative inline-block mb-4">
                 <img 
-                  src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=250" 
+                  src={profileImage} 
                   alt="Profile" 
                   className="w-32 h-32 rounded-full object-cover border-4 border-primary-100 dark:border-primary-900/30 shadow-lg mx-auto"
                 />
-                <button className="absolute bottom-0 right-0 bg-primary-600 hover:bg-primary-700 text-white p-2 rounded-full shadow-lg transition-colors border-2 border-white dark:border-slate-900">
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  ref={fileInputRef} 
+                  onChange={handleImageChange} 
+                  className="hidden" 
+                />
+                <button 
+                  onClick={() => fileInputRef.current.click()} 
+                  className="absolute bottom-0 right-0 bg-primary-600 hover:bg-primary-700 text-white p-2 rounded-full shadow-lg transition-colors border-2 border-white dark:border-slate-900 cursor-pointer"
+                  title="Change Profile Picture"
+                >
                   <Camera size={18} />
                 </button>
               </div>
+
               <h2 className="text-2xl font-black text-slate-900 dark:text-white">{profileData.firstName} {profileData.lastName}</h2>
               <p className="text-slate-500 dark:text-slate-400 font-medium mb-6">{profileData.email}</p>
               
@@ -77,10 +109,7 @@ const Profile = () => {
             </div>
           </div>
 
-          {/* Right Column: Forms */}
           <div className="lg:col-span-2 space-y-8">
-            
-            {/* Personal Information Form */}
             <div className="bg-white dark:bg-slate-900 p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-800 transition-colors">
               <div className="flex items-center gap-3 mb-6 pb-6 border-b border-gray-100 dark:border-slate-800">
                 <div className="bg-primary-100 dark:bg-primary-900/30 p-3 rounded-xl">
@@ -94,20 +123,14 @@ const Profile = () => {
                   <div>
                     <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">First Name</label>
                     <input 
-                      type="text" 
-                      name="firstName"
-                      value={profileData.firstName}
-                      onChange={handleProfileChange}
+                      type="text" name="firstName" value={profileData.firstName} onChange={handleProfileChange}
                       className="w-full px-4 py-3 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-600 text-slate-900 dark:text-white transition-colors"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Last Name</label>
                     <input 
-                      type="text" 
-                      name="lastName"
-                      value={profileData.lastName}
-                      onChange={handleProfileChange}
+                      type="text" name="lastName" value={profileData.lastName} onChange={handleProfileChange}
                       className="w-full px-4 py-3 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-600 text-slate-900 dark:text-white transition-colors"
                     />
                   </div>
@@ -118,10 +141,7 @@ const Profile = () => {
                         <Mail size={18} className="text-slate-400" />
                       </div>
                       <input 
-                        type="email" 
-                        name="email"
-                        value={profileData.email}
-                        onChange={handleProfileChange}
+                        type="email" name="email" value={profileData.email} onChange={handleProfileChange}
                         className="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-600 text-slate-900 dark:text-white transition-colors"
                       />
                     </div>
@@ -133,10 +153,7 @@ const Profile = () => {
                         <Phone size={18} className="text-slate-400" />
                       </div>
                       <input 
-                        type="tel" 
-                        name="phone"
-                        value={profileData.phone}
-                        onChange={handleProfileChange}
+                        type="tel" name="phone" value={profileData.phone} onChange={handleProfileChange}
                         className="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-600 text-slate-900 dark:text-white transition-colors"
                       />
                     </div>
@@ -150,7 +167,6 @@ const Profile = () => {
               </form>
             </div>
 
-            {/* Security / Password Form */}
             <div className="bg-white dark:bg-slate-900 p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-800 transition-colors">
               <div className="flex items-center gap-3 mb-6 pb-6 border-b border-gray-100 dark:border-slate-800">
                 <div className="bg-slate-100 dark:bg-slate-800 p-3 rounded-xl">
@@ -158,7 +174,6 @@ const Profile = () => {
                 </div>
                 <h2 className="text-2xl font-black text-slate-900 dark:text-white">Security & Password</h2>
               </div>
-
               <form onSubmit={handlePasswordSubmit} className="space-y-6">
                 <div>
                   <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Current Password</label>
@@ -166,18 +181,9 @@ const Profile = () => {
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                       <Lock size={18} className="text-slate-400" />
                     </div>
-                    <input 
-                      type="password" 
-                      name="currentPassword"
-                      value={passwordData.currentPassword}
-                      onChange={handlePasswordChange}
-                      required
-                      placeholder="••••••••"
-                      className="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-600 text-slate-900 dark:text-white transition-colors"
-                    />
+                    <input type="password" name="currentPassword" value={passwordData.currentPassword} onChange={handlePasswordChange} required placeholder="••••••••" className="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-600 text-slate-900 dark:text-white transition-colors" />
                   </div>
                 </div>
-                
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">New Password</label>
@@ -185,15 +191,7 @@ const Profile = () => {
                       <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                         <Lock size={18} className="text-slate-400" />
                       </div>
-                      <input 
-                        type="password" 
-                        name="newPassword"
-                        value={passwordData.newPassword}
-                        onChange={handlePasswordChange}
-                        required
-                        placeholder="••••••••"
-                        className="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-600 text-slate-900 dark:text-white transition-colors"
-                      />
+                      <input type="password" name="newPassword" value={passwordData.newPassword} onChange={handlePasswordChange} required placeholder="••••••••" className="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-600 text-slate-900 dark:text-white transition-colors" />
                     </div>
                   </div>
                   <div>
@@ -202,19 +200,10 @@ const Profile = () => {
                       <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                         <Lock size={18} className="text-slate-400" />
                       </div>
-                      <input 
-                        type="password" 
-                        name="confirmPassword"
-                        value={passwordData.confirmPassword}
-                        onChange={handlePasswordChange}
-                        required
-                        placeholder="••••••••"
-                        className="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-600 text-slate-900 dark:text-white transition-colors"
-                      />
+                      <input type="password" name="confirmPassword" value={passwordData.confirmPassword} onChange={handlePasswordChange} required placeholder="••••••••" className="w-full pl-11 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-600 text-slate-900 dark:text-white transition-colors" />
                     </div>
                   </div>
                 </div>
-
                 <div className="flex justify-end pt-4">
                   <button type="submit" className="bg-slate-900 dark:bg-slate-700 hover:bg-slate-800 dark:hover:bg-slate-600 text-white font-bold py-3 px-8 rounded-xl transition-colors shadow-lg">
                     Update Password

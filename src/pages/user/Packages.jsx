@@ -121,7 +121,7 @@ const Packages = () => {
               {/* 2. Price Range Slider */}
               <div className="mb-6">
                 <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
-                  Max Price: ${maxPrice.toLocaleString()}
+                  Max Price: ₹{maxPrice.toLocaleString()}
                 </label>
                 {/* FIX: INCREASED MAX TO 50,000 AND STEP TO 500 */}
                 <input
@@ -134,8 +134,8 @@ const Packages = () => {
                   className="w-full accent-primary-600 h-2 bg-gray-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer"
                 />
                 <div className="flex justify-between text-xs text-gray-500 dark:text-slate-400 mt-2 font-medium">
-                  <span>$500</span>
-                  <span>$50,000+</span>
+                  <span>₹500</span>
+                  <span>₹50,000+</span>
                 </div>
               </div>
 

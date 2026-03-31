@@ -5,6 +5,7 @@ import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ScrollToTop from "./components/ScrollToTop";
 
 // User Pages
 import Home from "./pages/user/Home";
@@ -13,6 +14,12 @@ import TourDetails from "./pages/user/TourDetails";
 import BookingHistory from "./pages/user/BookingHistory";
 import Profile from "./pages/user/Profile";
 import FAQ from "./pages/user/FAQ"; 
+
+// Legals
+
+import PrivacyPolicy from "./pages/legal/PrivacyPolicy"
+import TermsOfService from "./pages/legal/TermsOfService"
+import CancellationPolicy from "./pages/legal/CancellationPolicy"
 
 // Auth Pages
 import Login from "./pages/auth/Login";
@@ -49,6 +56,8 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col font-sans bg-gray-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50 transition-colors duration-300">
+
+      <ScrollToTop />
       
       {/* GLOBAL NAVBAR */}
       {showNavbar && <Navbar />}
@@ -90,6 +99,10 @@ function App() {
           <Route path="/admin/users" element={<ManageUsers />} />
           <Route path="/admin/reviews" element={<ManageReviews />} />
           <Route path="/admin/account" element={<AdminAccount />} />
+
+          <Route path="/legal/PrivacyPolicy" element={<PrivacyPolicy />} />
+          <Route path="/legal/TermsOfService" element={<TermsOfService />} />
+          <Route path="/legal/CancellationPolicy" element={<CancellationPolicy />} />
 
           {/* ----- 404 CATCH-ALL ----- */}
           <Route path="*" element={<NotFound />} />
